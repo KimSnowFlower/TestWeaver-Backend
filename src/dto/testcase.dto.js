@@ -17,7 +17,7 @@ class TestCaseGenerateReq {
 
 // 응답용: 테스트 케이스 한줄
 class TestCaseRowResp {
-    constructor (index, map) {
+    constructor(index, map) {
         this.index = index;
         this.values = map; // { paramName: value }
     }
@@ -25,12 +25,12 @@ class TestCaseRowResp {
 
 // 응답용: 세트 전체
 class TestCaseSetResp {
-    constructor({ id, name, strategy, parameterCount, testCase }) {
+    constructor({ id, name, strategy, parameterCount, testCases }) {
         this.id = id;
-        this.name= name;
+        this.name = name;
         this.strategy = strategy;
         this.parameterCount = parameterCount;
-        this.testCase = testCase // TestCaseRowResp[]
+        this.testCases = testCases // TestCaseRowResp[]
     }
 }
 

@@ -1,5 +1,5 @@
-const { 
-    TestCaseGenerateReq, 
+const {
+    TestCaseGenerateReq,
     TestCaseSetResp,
     TestCaseRowResp,
 } = require("../dto/testcase.dto");
@@ -7,6 +7,7 @@ const { createPairwiseStrategy } = require("../core/strategy/pairwise/PairwiseSt
 const TestCaseBuilder = require("../core/builder/TestCaseBuilder");
 const DefaultTestCaseValidator = require("../core/validator/DefaultTestCaseValidator");
 const testCaseRepo = require("../repositories/testcase.repository");
+const { createExporter } = require("../core/export/ExporterFactory");
 
 const builder = new TestCaseBuilder();
 const validator = new DefaultTestCaseValidator();
@@ -54,7 +55,7 @@ async function getSet(setId) {
     if (!setEntity) {
         const err = new Error("Test case set not found");
         err.status = 404;
-        
+
         throw err;
     }
 
@@ -72,7 +73,45 @@ async function getSet(setId) {
     });
 }
 
+/**
+ * Export: CSV or Excel
+ * @param {number} setId
+ * @param {string} type 'csv' | 'excel' | 'xlsx'
+ * @returns {Promise<{ filename: string, mime: string, data: Buffer }>}
+ */
+async function exportSet(setId, type) {
+    const set = await getSet(setId);
+    const exporter = createExporter(type);
+    const result = await exporter.export(set.testCases);
+
+    const t = (type || "csv").toLowerCase();
+    let mime, ext;
+
+    if (t === "xlsx" || t === "excel") {
+        mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        ext = "xlsx";
+    } else {
+        mime = "text/csv; charset-utf-8";
+        ext = "csv";
+    }
+
+    // CSV는 string, Excel은 Buffer → 통일해서 Buffer로 변환
+    const data =
+        typeof result === "string"
+            ? Buffer.from(result, "utf8")
+            : result;
+
+    const filename = `testcases_${setId}.${ext}`;
+
+    return {
+        filename,
+        mime,
+        data,
+    };
+}
+
 module.exports = {
     generate,
     getSet,
+    exportSet,
 };
