@@ -39,7 +39,7 @@ async function findByEmail(email) {
 
 async function findByNameAndEmail(name, email) {
     const [rows] = await db.execute(
-        `SELECT * FROM users WHERE name = ? AND email = ? AND = is_active = 1`,
+        `SELECT * FROM users WHERE name = ? AND email = ? AND is_active = 1`,
         [name, email]
     );
 
