@@ -1,17 +1,17 @@
 const { validationResult } = require("express-validator");
 
 function validateRequest(req, res, next) {
-    const errors = validateResult(req);
+    const errors = validationResult(req);
 
-    if(errors.isEmpty())
-        return next;
+    if (errors.isEmpty())
+        return next();
 
     const first = errors.array()[0];
-    const err = new Error(`${first.param}: ${first.msg}`);
 
-    err.status = 400;
-
-    return next(err);
+    return res.status(400).json({
+        success: false,
+        message: `${first.param}: ${first.msg}`,
+    });
 }
 
 module.exports = validateRequest;
