@@ -10,7 +10,7 @@ const {
     findIdValidation,
     resetPasswordValidation,
     changePasswordValidation,
-} = require("../validators/auth.validator");
+} = require("../core/validator/auth.validator");
 
 // 회원가입
 router.post("/register", registerValidation, validateRequest, authCtrl.register);
