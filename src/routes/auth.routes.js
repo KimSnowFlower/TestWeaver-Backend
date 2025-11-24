@@ -19,7 +19,7 @@ router.post("/register", registerValidation, validateRequest, authCtrl.register)
 router.post("/login", loginValidation, validateRequest, authCtrl.login);
 
 // 로그아웃
-router.post("logout", authCtrl.logout);
+router.post("/logout", authCtrl.logout);
 
 // 아이디 찾기
 router.post("/find-id", findIdValidation, validateRequest, authCtrl.findId);
