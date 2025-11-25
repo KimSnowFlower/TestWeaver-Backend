@@ -13,10 +13,8 @@ const builder = new TestCaseBuilder();
 const validator = new DefaultTestCaseValidator();
 
 async function getByProject(projectId) {
-    // 1) 프로젝트에 해당하는 TestCaseSet 목록 가져오기
     const sets = await testCaseRepo.findSetsByProject(projectId);
 
-    // 2) 각 세트별 items도 함께 가져오기
     const result = [];
 
     for (const s of sets) {
@@ -75,7 +73,7 @@ async function generate(body) {
 }
 
 async function getSet(setId) {
-    const setEntity = await repo.findSetById(setId);
+    const setEntity = await testCaseRepo.findSetById(setId);
     if (!setEntity) {
         const err = new Error("Test case set not found");
         err.status = 404;
@@ -83,7 +81,7 @@ async function getSet(setId) {
         throw err;
     }
 
-    const items = await repo.findItemsBySetId(setId);
+    const items = await testCaseRepo.findItemsBySetId(setId);
     const rows = builder.buildForResponse(items).map(
         r => new TestCaseRowResp(r.index, r.values)
     );

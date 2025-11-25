@@ -76,5 +76,5 @@ module.exports = {
     insertItems,
     findSetById,
     findItemsBySetId,
-    findSetsByProject, // ← 반드시 export!
+    findSetsByProject,
 };
