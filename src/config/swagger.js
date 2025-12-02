@@ -13,6 +13,10 @@ const options = {
                 url: "http://13.125.96.222:4000",
                 description: "AWS EC2 server",
             },
+            {
+                url: "http://localhost:4000",
+                description: "Local Development server",
+            },
         ],
         components: {
             securitySchemes: {
@@ -24,7 +28,7 @@ const options = {
             },
         },
     },
-    apis: ["./src/routes/*.js", "./src/controllers/*.js"],
+    apis: ["./src/routes/*.js", "./src/controllers/*.js, ./src/dto/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

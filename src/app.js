@@ -21,6 +21,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+// swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // routes
