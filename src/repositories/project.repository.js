@@ -1,9 +1,9 @@
 const db = require("../config/db");
 
-async function createProject({ userId, name, description }) {
+async function createProject({ userId, name, description, swaggerURL }) {
     const [result] = await db.execute(
-        `INSERT INTO test_projects (user_id, name, description) VALUES (?, ?, ?)`,
-        [userId, name, description ?? null]
+        `INSERT INTO test_projects (user_id, name, description, swagger_url) VALUES (?, ?, ?, ?)`,
+        [userId, name, description ?? null, swaggerURL ?? null]
     );
 
     return await findById(result.insertId);

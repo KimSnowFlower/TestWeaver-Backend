@@ -1,8 +1,9 @@
 class ProjectCreateReq {
-    constructor({ userId, name, description }) {
+    constructor({ userId, name, description, swaggerURL }) {
         this.userId = userId;
         this.name = name;
         this.description = description;
+        this.swaggerURL = swaggerURL;
     }
 }
 

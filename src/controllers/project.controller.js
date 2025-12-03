@@ -1,7 +1,7 @@
 const asyncHandler = require("../utils/asyncHandler");
 const projectService = require("../services/project.service");
-
 const testcaseService = require("../services/testcase.service");
+const swaggerService = require("../services/swagger.service");
 
 /**
  * @swagger
@@ -206,6 +206,27 @@ const getTestCases = asyncHandler(async (req, res) => {
     res.json({ success: true, data: testCases });
 });
 
+/**
+ * @swagger
+ * /api/v1/projects/analyze-swagger:
+ *   post:
+ *     summary: Analyze Swagger URL and extract API endpoints
+ */
+const analyzeSwagger = asyncHandler(async (req, res) => {
+    const { swaggerURL } = req.body;
+
+    if (!swaggerURL) {
+        res.status(400);
+        throw new Error("swaggerURL is required");
+    }
+
+    const result = await swaggerService.parseSwagger(swaggerURL);
+    res.json({
+        success: true,
+        data: result
+    });
+});
+
 module.exports = {
     create,
     list,
@@ -214,4 +235,5 @@ module.exports = {
     remove,
     generateModel,
     getTestCases,
+    analyzeSwagger,
 };
