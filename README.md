@@ -12,7 +12,7 @@
 
 TestWeaver는 다음과 같은 목적으로 가진 테스트 설계 도구.
 
-- 파라미터와 값 목록을 입력하면 **Pairwise(IPO) 알고리즘**으로 테스트 케이스를 자동 생성
+- Swagger를 연동하여 프론트에서 Faker.js로 랜덤을 넣으면 **Pairwise(IPO) 알고리즘**으로 테스트 케이스를 자동 생성
 
 - 생성된 테스트 케이스를 웹 UI에서 조회/관리
 
@@ -53,69 +53,54 @@ TestWeaver는 다음과 같은 목적으로 가진 테스트 설계 도구.
 ### 3. 프로젝트 구조 (Folder Structure)
 
 ```bash
-📦 testweaver-backend
-├─ 📁 src
-│  ├─ 📁 config
-│  │   ├─ env.js           # 환경변수 로딩 및 공통 설정
-│  │   └─ db.js            # MySQL2 연결 풀 생성
-│  │
-│  ├─ 📁 routes            # 라우터 (Express Router)
-│  │   ├─ project.routes.js
-│  │   ├─ testcase.routes.js
-│  │   └─ auth.routes.js
-│  │
-│  ├─ 📁 controller        # Request → Service 호출, DTO 매핑
-│  │   ├─ project.controller.js
-│  │   ├─ testcase.controller.js
-│  │   └─ auth.controller.js
-│  │
-│  ├─ 📁 service           # 비즈니스 로직
-│  │   ├─ project.service.js
-│  │   ├─ testcase.service.js
-│  │   └─ auth.service.js
-│  │
-│  ├─ 📁 repositories        # DB 접근 계층 (MySQL2 + SQL)
-│  │   ├─ project.repository.js
-│  │   ├─ testcase.repository.js
-│  │   └─ user.repository.js
-│  │
-│  ├─ 📁 core            # 도메인 로직 & 패턴 모음
-│  │   ├─ 📁 strategy
-│  │   │   └─ 📁 pairwise
-│  │   │       ├─ IPOGStrategy.js
-│  │   │       ├─ IPOStrategy.js
-│  │   │       ├─ PairwiseEngine.js
-│  │   │       ├─ PairwiseStrategy.js
-│  │   │       └─ PairwiseStrategyFactory.js
-│  │   │
-│  │   ├─ 📁 builder
-│  │   │   └─ TestCaseBuilder.js   # parameter + values → testcase 조립
-│  │   │
-│  │   ├─ 📁 export
-│  │   │   ├─ ExporterFactory.js   # type: 'csv' | 'excel' → Exporter 생성
-│  │   │   ├─ CsvExporter.js
-│  │   │   └─ ExcelExporter.js
-│  │   │
-│  │   ├─ 📁 validator
-│  │   │   ├─ auth.validator.js
-│  │   │   ├─ TestCaseValidator.js
-│  │   │   └─ DefaultTestCaseValidator.js
-│  │
-│  ├─ 📁 dto
-│  │   ├─ project.dto.js
-│  │   └─ testcase.dto.js
-│  │
-│  ├─ 📁 middleware
-│  │   ├─ errorHandler.js
-│  │   ├─ validateRequest.js
-│  │   └─ auth.js
-│  │
-│  ├─ 📁 utils
-│  │   └─ asyncHandler.js          # 비동기 controller 에러 래핑
-│  │
-│  ├─ app.js                       # Express 앱 설정, 미들웨어/라우터 등록
-│  └─ server.js                    # 실제 서버 시작 (http.listen)
-│
-├─ .env                            # 실제 환경 변수 (Git에 올리지 않음)
-├─ package.json
-└─ README.md
+📦src
+ ┣ 📂config
+ ┃ ┣ 📜db.js
+ ┃ ┣ 📜env.js
+ ┃ ┗ 📜swagger.js
+ ┣ 📂controllers
+ ┃ ┣ 📜auth.controller.js
+ ┃ ┣ 📜project.controller.js
+ ┃ ┗ 📜testcase.controller.js
+ ┣ 📂core
+ ┃ ┣ 📂builder
+ ┃ ┃ ┗ 📜TestCaseBuilder.js
+ ┃ ┣ 📂export
+ ┃ ┃ ┣ 📜CsvExporter.js
+ ┃ ┃ ┣ 📜ExcelExporter.js
+ ┃ ┃ ┗ 📜ExporterFactory.js
+ ┃ ┣ 📂strategy
+ ┃ ┃ ┗ 📂pairwise
+ ┃ ┃ ┃ ┣ 📜IPOGStrategy.js
+ ┃ ┃ ┃ ┣ 📜IPOStrategy.js
+ ┃ ┃ ┃ ┣ 📜PairwiseEngine.js
+ ┃ ┃ ┃ ┣ 📜PairwiseStrategy.js
+ ┃ ┃ ┃ ┗ 📜PairwiseStrategyFactory.js
+ ┃ ┗ 📂validator
+ ┃ ┃ ┣ 📜auth.validator.js
+ ┃ ┃ ┣ 📜DefaultTestCaseValidator.js
+ ┃ ┃ ┗ 📜TestCaseValidator.js
+ ┣ 📂dto
+ ┃ ┣ 📜project.dto.js
+ ┃ ┗ 📜testcase.dto.js
+ ┣ 📂middlewares
+ ┃ ┣ 📜auth.js
+ ┃ ┣ 📜errorHandler.js
+ ┃ ┗ 📜validateRequest.js
+ ┣ 📂repositories
+ ┃ ┣ 📜project.repository.js
+ ┃ ┣ 📜testcase.repository.js
+ ┃ ┗ 📜user.repository.js
+ ┣ 📂routes
+ ┃ ┣ 📜auth.routes.js
+ ┃ ┣ 📜project.routes.js
+ ┃ ┗ 📜testcase.routes.js
+ ┣ 📂services
+ ┃ ┣ 📜auth.service.js
+ ┃ ┣ 📜project.service.js
+ ┃ ┣ 📜swagger.service.js
+ ┃ ┗ 📜testcase.service.js
+ ┣ 📂utils
+ ┃ ┗ 📜asyncHandler.js
+ ┣ 📜app.js
+ ┗ 📜server.js
